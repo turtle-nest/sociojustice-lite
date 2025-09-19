@@ -1,0 +1,18 @@
+# Node/Angular
+node_modules/
+dist/
+coverage/
+
+# Java/Maven/Gradle
+backend/target/
+backend/build/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/.mvn/wrapper/maven-wrapper-downloader.jar
+
+# OS/IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Env
+*.env
