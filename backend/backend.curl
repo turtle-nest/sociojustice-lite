@@ -1,0 +1,1 @@
+{"timestamp":"2025-09-19T13:47:46.290+00:00","status":400,"error":"Bad Request","message":"Unknown type 'maven-project,maven-project' check project metadata","path":"/starter.zip"}
