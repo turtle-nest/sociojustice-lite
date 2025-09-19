@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tokens simples (desktop/tablette) */
+:root {
+  --brand: #5b5bd6; /* violet doux */
+  --text: #1f2937;  /* gris 800 */
+  --bg:   #ffffff;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+}
