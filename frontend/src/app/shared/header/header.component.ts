@@ -17,6 +17,7 @@ import { HealthService } from '../../core/health.service';
           <a routerLink="/" class="hover:underline">Accueil</a>
           <a routerLink="/recherche" class="hover:underline">Recherche</a>
           <a routerLink="/decisions" class="hover:underline">Décisions</a>
+          <a routerLink="/auth" class="hover:underline">Connexion</a>
 
           <!-- Badge visible uniquement en DEV -->
           <ng-container *ngIf="showBadge">

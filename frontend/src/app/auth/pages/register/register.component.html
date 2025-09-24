@@ -1,0 +1,86 @@
+<div class="auth-shell">
+  <div class="auth-card">
+    <h1 class="auth-title">Créer un compte</h1>
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <!-- Email -->
+      <div class="form-field">
+        <label for="email">Adresse e-mail</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="prenom.nom@email.com"
+          formControlName="email"
+          [class.invalid]="form.controls.email.touched && form.controls.email.invalid"
+          autocomplete="username"
+        />
+        <div class="error" *ngIf="form.controls.email.touched && form.controls.email.errors?.['required']">
+          L’e-mail est requis.
+        </div>
+        <div class="error" *ngIf="form.controls.email.touched && form.controls.email.errors?.['email']">
+          Format d’e-mail invalide.
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-field">
+        <label for="password">Mot de passe</label>
+        <div class="password-wrap">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Au moins 8 caractères"
+            formControlName="password"
+            [class.invalid]="form.controls.password.touched && form.controls.password.invalid"
+            autocomplete="new-password"
+          />
+          <button type="button" class="ghost" (click)="togglePassword()">
+            {{ showPassword ? 'Masquer' : 'Afficher' }}
+          </button>
+        </div>
+        <div class="error" *ngIf="form.controls.password.touched && form.controls.password.errors?.['required']">
+          Le mot de passe est requis.
+        </div>
+        <div class="error" *ngIf="form.controls.password.touched && form.controls.password.errors?.['minlength']">
+          Au moins 8 caractères.
+        </div>
+      </div>
+
+      <!-- Confirm -->
+      <div class="form-field">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <div class="password-wrap">
+          <input
+            id="confirmPassword"
+            [type]="showConfirm ? 'text' : 'password'"
+            placeholder="Répétez le mot de passe"
+            formControlName="confirmPassword"
+            [class.invalid]="form.controls.confirmPassword.touched && (form.controls.confirmPassword.invalid || form.errors?.['mismatch'])"
+            autocomplete="new-password"
+          />
+          <button type="button" class="ghost" (click)="toggleConfirm()">
+            {{ showConfirm ? 'Masquer' : 'Afficher' }}
+          </button>
+        </div>
+        <div class="error" *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.errors?.['required']">
+          La confirmation est requise.
+        </div>
+        <div class="error" *ngIf="form.touched && form.errors?.['mismatch']">
+          Les mots de passe ne correspondent pas.
+        </div>
+      </div>
+
+      <!-- Server feedback -->
+      <div class="error server" *ngIf="serverError">{{ serverError }}</div>
+      <div class="success" *ngIf="successMessage">{{ successMessage }}</div>
+
+      <button class="primary" type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Création du compte…' : 'Créer un compte' }}
+      </button>
+    </form>
+
+    <p class="muted">
+      Déjà inscrit ?
+      <a routerLink="/auth/login">Se connecter</a>
+    </p>
+  </div>
+</div>
