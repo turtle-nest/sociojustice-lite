@@ -7,17 +7,14 @@ import {
   FormControl,
   NonNullableFormBuilder,
 } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../auth.service';
+import type { AuthResponse } from '../../auth.service';
 
 type LoginForm = FormGroup<{
   email: FormControl<string>;
   password: FormControl<string>;
 }>;
-
-interface AuthResponse {
-  token: string;
-}
 
 @Component({
   selector: 'app-login',
@@ -29,13 +26,13 @@ export class LoginComponent {
   isSubmitting = false;
   showPassword = false;
   serverError = '';
-
   form!: LoginForm;
 
   constructor(
     private fb: NonNullableFormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.form = this.fb.group({
       email: this.fb.control('', { validators: [Validators.required, Validators.email] }),
@@ -43,6 +40,26 @@ export class LoginComponent {
         validators: [Validators.required, Validators.minLength(8)],
       }),
     });
+  }
+
+  get authState$() {
+    return this.auth.isAuthenticated$;
+  }
+
+  get loggedInNow(): boolean {
+    return this.auth.isLoggedIn();           // check sync
+  }
+
+  get redirectTarget(): string {
+    return this.route.snapshot.queryParamMap.get('redirectUrl') || '/home';
+  }
+
+  go(): void {
+    this.router.navigateByUrl(this.redirectTarget);
+  }
+
+  get hasToken(): boolean {
+    return !!localStorage.getItem('sj_token');
   }
 
   togglePassword(): void {
@@ -55,20 +72,23 @@ export class LoginComponent {
       this.form.markAllAsTouched();
       return;
     }
-    this.isSubmitting = true;
 
+    this.isSubmitting = true;
     const { email, password } = this.form.getRawValue();
+
     this.auth.login({ email, password }).subscribe({
       next: (res: AuthResponse) => {
-        localStorage.setItem('sj_token', res.token);
-        this.router.navigateByUrl('/');
+        const redirect = this.route.snapshot.queryParamMap.get('redirectUrl') || '/home';
+        this.router.navigateByUrl(redirect);
       },
       error: (err: unknown) => {
         const anyErr = err as { error?: { message?: string } };
         this.serverError = anyErr?.error?.message ?? 'Échec de la connexion. Vérifiez vos identifiants.';
         this.isSubmitting = false;
       },
-      complete: () => (this.isSubmitting = false),
+      complete: () => {
+        this.isSubmitting = false;
+      },
     });
   }
 }
