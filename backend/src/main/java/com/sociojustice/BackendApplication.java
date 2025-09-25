@@ -1,4 +1,4 @@
-package com.sociojustice.api;
+package com.sociojustice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
