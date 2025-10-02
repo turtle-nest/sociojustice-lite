@@ -6,6 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class AuthService {
     private final UserRepository users;
@@ -26,6 +28,17 @@ public class AuthService {
 
         User user = new User(email, hashed);
         return users.save(user);
+    }
+
+    public User login(String email, String rawPassword) {
+        User user = users.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        if (!encoder.matches(rawPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Invalid credentials");
+        }
+
+        return user;
     }
 
     public static class EmailAlreadyUsedException extends RuntimeException {

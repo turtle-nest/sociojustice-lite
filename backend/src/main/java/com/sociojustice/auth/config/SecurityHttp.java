@@ -13,7 +13,7 @@ public class SecurityHttp {
         http
                 .csrf(csrf -> csrf.disable()) // désactive CSRF pour faciliter les tests API
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register").permitAll() // autorise l'inscription
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // autorise l'inscription
                         .anyRequest().permitAll() // en dev : ouvre tout
                 );
         return http.build();

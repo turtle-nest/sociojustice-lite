@@ -53,4 +53,29 @@ public class GlobalExceptionHandler {
                 req.getRequestURI());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
+
+    // 409 : inscription avec email déjà utilisé
+    @ExceptionHandler(com.sociojustice.auth.service.AuthService.EmailAlreadyUsedException.class)
+    public ResponseEntity<ApiError> handleEmailAlreadyUsed(
+            com.sociojustice.auth.service.AuthService.EmailAlreadyUsedException ex,
+            HttpServletRequest req
+    ) {
+        var body = ApiError.of(
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage() != null ? ex.getMessage() : "Email already used",
+                req.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
+    // 401 : login raté (utilisateur introuvable OU mauvais mot de passe)
+    @ExceptionHandler({ java.util.NoSuchElementException.class, IllegalArgumentException.class })
+    public ResponseEntity<ApiError> handleAuthErrors(RuntimeException ex, HttpServletRequest req) {
+        var body = ApiError.of(
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage() != null ? ex.getMessage() : "Unauthorized",
+                req.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+    }
 }

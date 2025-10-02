@@ -3,6 +3,7 @@ package com.sociojustice.auth.web;
 import com.sociojustice.auth.model.User;
 import com.sociojustice.auth.service.AuthService;
 import com.sociojustice.auth.web.dto.RegisterRequest;
+import com.sociojustice.auth.web.dto.LoginRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,5 +30,15 @@ public class AuthController {
                         "id", saved.getId(),
                         "email", saved.getEmail()
                 ));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+        var user = authService.login(request.getEmail(), request.getPassword());
+        // No JWT for now
+        return ResponseEntity.ok(Map.of(
+                "id", user.getId(),
+                "email", user.getEmail()
+        ));
     }
 }
